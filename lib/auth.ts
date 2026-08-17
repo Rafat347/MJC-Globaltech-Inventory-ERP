@@ -4,8 +4,8 @@ import { cookies } from 'next/headers';
 import { db } from './db';
 import { AuthUser, UserRole } from './types';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'zenith_sme_erp_jwt_secret_key_production_grade_secure_2026';
-const COOKIE_NAME = 'zenith_auth_token';
+const JWT_SECRET = process.env.JWT_SECRET || 'mjc_globaltech_erp_jwt_secret_key_production_grade_secure_2026';
+const COOKIE_NAME = 'mjc_globaltech_auth_token';
 
 export async function hashPassword(password: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
