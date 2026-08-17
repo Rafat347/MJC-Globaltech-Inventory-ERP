@@ -10,6 +10,42 @@ async function hashPassword(password: string) {
 async function main() {
   console.log('🌱 Starting Zenith ERP Database Seeder...');
 
+  // Clean existing tables (prevent unique constraint failures on multiple builds)
+  console.log('🧹 Clearing existing database tables to prevent unique key constraint conflicts...');
+  await prisma.journalLine.deleteMany().catch(() => {});
+  await prisma.journalEntry.deleteMany().catch(() => {});
+  await prisma.account.deleteMany().catch(() => {});
+  await prisma.stockMovement.deleteMany().catch(() => {});
+  await prisma.stockAdjustmentItem.deleteMany().catch(() => {});
+  await prisma.stockAdjustment.deleteMany().catch(() => {});
+  await prisma.stock.deleteMany().catch(() => {});
+  await prisma.invoiceItem.deleteMany().catch(() => {});
+  await prisma.invoice.deleteMany().catch(() => {});
+  await prisma.quotationItem.deleteMany().catch(() => {});
+  await prisma.quotation.deleteMany().catch(() => {});
+  await prisma.salesOrderItem.deleteMany().catch(() => {});
+  await prisma.salesOrder.deleteMany().catch(() => {});
+  await prisma.purchaseInvoiceItem.deleteMany().catch(() => {});
+  await prisma.purchaseInvoice.deleteMany().catch(() => {});
+  await prisma.purchaseOrderItem.deleteMany().catch(() => {});
+  await prisma.purchaseOrder.deleteMany().catch(() => {});
+  await prisma.paymentAllocation.deleteMany().catch(() => {});
+  await prisma.payment.deleteMany().catch(() => {});
+  await prisma.expense.deleteMany().catch(() => {});
+  await prisma.expenseCategory.deleteMany().catch(() => {});
+  await prisma.product.deleteMany().catch(() => {});
+  await prisma.productCategory.deleteMany().catch(() => {});
+  await prisma.unit.deleteMany().catch(() => {});
+  await prisma.warehouse.deleteMany().catch(() => {});
+  await prisma.taxRate.deleteMany().catch(() => {});
+  await prisma.customer.deleteMany().catch(() => {});
+  await prisma.supplier.deleteMany().catch(() => {});
+  await prisma.financialYear.deleteMany().catch(() => {});
+  await prisma.auditLog.deleteMany().catch(() => {});
+  await prisma.user.deleteMany().catch(() => {});
+  await prisma.company.deleteMany().catch(() => {});
+  console.log('🧹 Existing database tables cleared.');
+
   // 1. Create Company
   const company = await prisma.company.upsert({
     where: { id: 'apex-tech-demo-company' },
@@ -951,10 +987,10 @@ async function main() {
   console.log('✅ Seeding completed successfully!');
   console.log('------------------------------------------------');
   console.log('Demo Login Credentials:');
-  console.log('👑 Admin:      admin@zenith.erp / admin123');
-  console.log('👔 Manager:    manager@zenith.erp / admin123');
-  console.log('💰 Accountant: accountant@zenith.erp / admin123');
-  console.log('💼 Sales:      sales@zenith.erp / admin123');
+  console.log('👑 Admin:      admin@mjcglobaltech.com / admin123');
+  console.log('👔 Manager:    manager@mjcglobaltech.com / admin123');
+  console.log('💰 Accountant: accountant@mjcglobaltech.com / admin123');
+  console.log('💼 Sales:      sales@mjcglobaltech.com / admin123');
   console.log('------------------------------------------------');
 }
 
