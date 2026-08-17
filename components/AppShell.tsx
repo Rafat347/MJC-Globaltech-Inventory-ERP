@@ -23,6 +23,8 @@ import {
   ShieldAlert,
   ChevronDown,
   UserCheck,
+  Menu,
+  X,
 } from 'lucide-react';
 import { formatINR } from '@/lib/invoicing';
 
@@ -97,6 +99,11 @@ export default function AppShell({ children }: AppShellProps) {
   const [loading, setLoading] = useState(true);
   const [showRoleSwitcher, setShowRoleSwitcher] = useState(false);
   const [switchingRole, setSwitchingRole] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
 
   const fetchSession = () => {
     fetch('/api/auth/me')
@@ -194,25 +201,46 @@ export default function AppShell({ children }: AppShellProps) {
   const currentRoleInfo = roleMeta[userRole] || roleMeta.SALESPERSON;
 
   return (
-    <div className="flex h-screen bg-slate-100 overflow-hidden text-slate-800">
+    <div className="flex h-screen bg-slate-100 overflow-hidden text-slate-800 relative">
+      {/* Sidebar Backdrop Overlay on Mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-30 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 border-r border-slate-800 select-none">
+      <aside
+        className={`w-64 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 border-r border-slate-800 select-none fixed md:relative inset-y-0 left-0 z-40 md:z-auto transform md:transform-none transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}
+      >
         {/* Brand Header */}
-        <div className="h-16 px-4 flex items-center gap-3 border-b border-slate-800/80 bg-slate-950/40">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-400 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-indigo-600/30">
-            MJC
-          </div>
-          <div className="min-w-0">
-            <div className="font-bold text-xs text-white tracking-tight flex items-center gap-1">
-              <span className="truncate">MJC Globaltech</span>
-              <span className="text-[9px] font-bold uppercase bg-indigo-500/20 text-indigo-400 px-1 py-0.2 rounded border border-indigo-500/30">
-                ERP
-              </span>
+        <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800/80 bg-slate-950/40">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-400 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-indigo-600/30">
+              MJC
             </div>
-            <div className="text-[10px] text-slate-400 truncate">
-              {company?.tradeName || company?.name || 'Inventory ERP'}
+            <div className="min-w-0">
+              <div className="font-bold text-xs text-white tracking-tight flex items-center gap-1">
+                <span className="truncate">MJC Globaltech</span>
+                <span className="text-[9px] font-bold uppercase bg-indigo-500/20 text-indigo-400 px-1 py-0.2 rounded border border-indigo-500/30">
+                  ERP
+                </span>
+              </div>
+              <div className="text-[10px] text-slate-400 truncate">
+                {company?.tradeName || company?.name || 'Inventory ERP'}
+              </div>
             </div>
           </div>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="p-1 text-slate-400 hover:text-white md:hidden"
+            title="Close Menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* User Role Badge in Sidebar */}
@@ -278,13 +306,20 @@ export default function AppShell({ children }: AppShellProps) {
       {/* Main App Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top App Bar */}
-        <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between flex-shrink-0 z-20">
-          <div className="flex items-center gap-3">
+        <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between flex-shrink-0 z-20">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 md:hidden transition-colors"
+              title="Open Menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
             <span className="text-xs font-semibold text-slate-500 hidden sm:inline">Active Company:</span>
-            <span className="text-xs font-bold text-slate-900 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 truncate max-w-xs">
+            <span className="text-xs font-bold text-slate-900 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 truncate max-w-[140px] sm:max-w-xs">
               {company?.name || 'MJC Globaltech Pvt Ltd'}
             </span>
-            <span className="text-[11px] font-mono text-slate-400 hidden md:inline">
+            <span className="text-[11px] font-mono text-slate-400 hidden lg:inline">
               GSTIN: {company?.gstin || '29AABCU9603R1ZM'}
             </span>
           </div>
