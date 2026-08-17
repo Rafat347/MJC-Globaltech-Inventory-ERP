@@ -12,7 +12,7 @@ async function main() {
 
   // Clean existing tables (prevent unique constraint failures on multiple builds)
   console.log('🧹 Clearing existing database tables to prevent unique key constraint conflicts...');
-  await prisma.journalLine.deleteMany().catch(() => {});
+  await prisma.journalEntryLine.deleteMany().catch(() => {});
   await prisma.journalEntry.deleteMany().catch(() => {});
   await prisma.account.deleteMany().catch(() => {});
   await prisma.stockMovement.deleteMany().catch(() => {});
